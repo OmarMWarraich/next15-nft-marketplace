@@ -9,6 +9,12 @@ import { Button } from "@/components/ui/button";
 import Theme from "./navbar/Theme";
 import images from "../public/assets";
 
+type CheckActiveProps = {
+  active: string;
+  setActive: (item: string) => void;
+  router: any;
+};
+
 const NAV_ITEMS = [
   { label: "Explore NFTs", path: "/" },
   { label: "Listed NFTs", path: "/created-nfts" },
@@ -55,29 +61,46 @@ const MenuItems: React.FC<{
 const ButtonGroup: React.FC<{
   setActive: (item: string) => void;
   router: any;
-}> = ({ setActive, router }) => (
-  <div className="flexCenter">
-    <Button
-      variant="default"
-      className="mx-2 rounded-xl"
-      onClick={() => {
-        setActive("");
-        router.push("/create-nft");
-      }}
-    >
-      Create
-    </Button>
-  </div>
-);
+}> = ({ setActive, router }) => {
+  const hasConnected = true;
+  return hasConnected ? (
+    <div className="flexCenter">
+      <Button
+        variant="default"
+        className="mx-2 rounded-xl"
+        onClick={() => {
+          setActive("");
+          router.push("/create-nft");
+        }}
+      >
+        Create
+      </Button>
+    </div>
+  ) : (
+    <div className="flexCenter">
+      <Button
+        variant="default"
+        className="mx-2 rounded-xl"
+        onClick={() => {
+          setActive("");
+          router.push("/connect-wallet");
+        }}
+      >
+        Connect Wallet
+      </Button>
+    </div>
+  );
+};
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const [active, setActive] = useState("Explore NFTs");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-
-  useEffect(() => setTheme("dark"), []);
   const pathname = usePathname();
+
+  // useEffect(() => setTheme("dark"), []);
+
   useEffect(() => setActive(routeToActiveLabel[pathname] || ""), [pathname]);
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "visible";
@@ -98,9 +121,7 @@ const Navbar = () => {
               height={32}
               alt="logo"
             />
-            <p className="dark:text-white text-nft-black-1 font-semibold text-lg ml-1">
-              NFT Marketplace
-            </p>
+            <p className="font-semibold text-lg ml-1">NFT Marketplace</p>
           </div>
         </Link>
         <Link href="/">
@@ -135,7 +156,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className="hidden md:flex ml-2">
+        <div className="hidden md:flex ml-2 md:me-2">
           {!isOpen ? (
             <Image
               src={images.menu}
