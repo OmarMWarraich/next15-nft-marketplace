@@ -156,7 +156,9 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className="hidden md:flex ml-2 md:me-2">
+        <Theme />
+
+        <div className="hidden md:flex ml-2">
           {!isOpen ? (
             <Image
               src={images.menu}
@@ -196,7 +198,6 @@ const Navbar = () => {
           )}
         </div>
       </div>
-      <Theme />
     </nav>
   );
 };
