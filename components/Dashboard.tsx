@@ -12,6 +12,7 @@ import CreatorCard from "@/components/CreatorCard";
 import { shortenAddress } from "@/utils/shortenAddress";
 import images from "@/public/assets";
 import { makeid } from "@/utils/makeId";
+import NFTCard from "./NFTCard";
 
 const Dashboard = () => {
   interface NFT {
@@ -82,15 +83,16 @@ const Dashboard = () => {
   //   const creators = getCreators(nfts);
 
   return (
-    <div
-      className="relative flex-1 max-w-full flex mt-3 justify-center"
-      ref={parentRef}
-    >
+    <>
       <div
-        className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none "
-        ref={scrollRef}
+        className="relative flex-1 max-w-full flex mt-3 justify-center"
+        ref={parentRef}
       >
-        {/* {creators.map((creator, i) => (
+        <div
+          className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none "
+          ref={scrollRef}
+        >
+          {/* {creators.map((creator, i) => (
           <CreatorCard
             key={creator.seller}
             rank={i + 1}
@@ -99,43 +101,78 @@ const Dashboard = () => {
             creatorEths={creator.sumall}
           />
         ))} */}
-        {[6, 7, 8, 9, 10].map((i) => (
-          <CreatorCard
-            key={`creator-${i}`}
-            rank={i}
-            creatorImage={images[`creator${i}`]}
-            creatorName={`0x${makeid(3)}...${makeid(4)}`}
-            creatorEths={(10 - i) * 0.534}
-          />
-        ))}
-        {!hideButtons && (
-          <>
-            <div
-              onClick={() => handleScroll("left")}
-              className="absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer left-0"
-            >
-              <Image
-                src={images.left}
-                layout="fill"
-                objectFit="contain"
-                alt="left_arrow"
-              />
-            </div>
-            <div
-              onClick={() => handleScroll("right")}
-              className="absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer right-0"
-            >
-              <Image
-                src={images.right}
-                layout="fill"
-                objectFit="contain"
-                alt="left_arrow"
-              />
-            </div>
-          </>
-        )}
+          {[6, 7, 8, 9, 10].map((i) => (
+            <CreatorCard
+              key={`creator-${i}`}
+              rank={i}
+              creatorImage={images[`creator${i}`]}
+              creatorName={`0x${makeid(3)}...${makeid(4)}`}
+              creatorEths={(10 - i) * 0.534}
+            />
+          ))}
+          {!hideButtons && (
+            <>
+              <div
+                onClick={() => handleScroll("left")}
+                className="absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer left-0"
+              >
+                <Image
+                  src={images.left}
+                  layout="fill"
+                  objectFit="contain"
+                  alt="left_arrow"
+                />
+              </div>
+              <div
+                onClick={() => handleScroll("right")}
+                className="absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer right-0"
+              >
+                <Image
+                  src={images.right}
+                  layout="fill"
+                  objectFit="contain"
+                  alt="left_arrow"
+                />
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+      <div className="mt-10">
+        <div className="flexBetween mx-4 xs:mx-0 minlg:mx-8 sm:flex-col sm:items-start">
+          <h1 className="flex-1 font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold sm:mb-4">
+            Hot Bids
+          </h1>
+
+          <div className="flex-2 sm:w-full flex flex-row sm:flex-col">
+            {/* <SearchBar
+              activeSelect={activeSelect}
+              setActiveSelect={setActiveSelect}
+              handleSearch={onHandleSearch}
+              clearSearch={onClearSearch}
+            /> */}
+          </div>
+        </div>
+        <div className="mt-3 w-full flex flex-wrap justify-center">
+          {/* {nfts.map((nft) => (
+            <NFTCard key={nft.tokenId} nft={nft} />
+          ))} */}
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+            <NFTCard
+              key={`nft-${i}`}
+              nft={{
+                i,
+                name: `Nifty NFT ${i}`,
+                price: (10 - i * 0.534).toFixed(2),
+                seller: `0x${makeid(3)}...${makeid(4)}`,
+                owner: `0x${makeid(3)}...${makeid(4)}`,
+                description: "Cool NFT on Sale",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 
