@@ -1,41 +1,22 @@
 "use client";
 
 import { useState, useMemo, useCallback, useContext } from "react";
-import { create as ipfsHttpClient } from "ipfs-http-client";
-import { useRouter } from "next/router";
+// import { create as ipfsHttpClient } from "ipfs-http-client";
+import { useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 
-// import { NFTContext } from "../context/NFTContext";
 import Input from "@/components/Input";
-
-import Loader from "@/components/Loader";
-
 import images from "@/public/assets";
 import { Button } from "@/components/ui/button";
 
-const client = ipfsHttpClient({ url: "https://ipfs.infura.io:5001/api/v0" });
-
 const CreateItem = () => {
-  // const { createSale, isLoadingNFT } = useContext(NFTContext);
   const [fileUrl, setFileUrl] = useState(null);
   const { theme } = useTheme();
 
-  const uploadToInfura = async (file: any) => {
-    try {
-      const added = await client.add({ content: file });
-
-      const url: any = `https://ipfs.infura.io/ipfs/${added.path}`;
-
-      setFileUrl(url);
-    } catch (error) {
-      console.log("Error uploading file: ", error);
-    }
-  };
-
   const onDrop = useCallback(async (acceptedFile: any) => {
-    await uploadToInfura(acceptedFile[0]);
+    /* upload image to IPFS */
   }, []);
 
   const {
@@ -73,8 +54,8 @@ const CreateItem = () => {
     /* first, upload to IPFS */
     const data = JSON.stringify({ name, description, image: fileUrl });
     try {
-      const added = await client.add(data);
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      // const added = await client.add(data);
+      // const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
       // await createSale(url, formInput.price);
       router.push("/");
@@ -117,7 +98,7 @@ const CreateItem = () => {
                     height={100}
                     objectFit="contain"
                     alt="file upload"
-                    className={theme === "light" ? "filter invert" : undefined}
+                    className="filter invert "
                   />
                 </div>
 
