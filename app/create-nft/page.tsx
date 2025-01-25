@@ -98,7 +98,7 @@ const CreateItem = () => {
                     height={100}
                     objectFit="contain"
                     alt="file upload"
-                    className="filter invert "
+                    className="invert"
                   />
                 </div>
 
