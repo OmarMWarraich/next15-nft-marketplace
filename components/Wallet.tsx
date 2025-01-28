@@ -6,7 +6,7 @@ import { useAppKitAccount } from "@reown/appkit/react";
 import React from "react";
 
 export const Wallet: React.FC = () => {
-  const { open, close } = useAppKit();
+  const { open } = useAppKit();
   const { isConnected } = useAppKitAccount();
   return (
     <div>
