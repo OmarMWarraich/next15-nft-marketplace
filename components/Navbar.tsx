@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Theme from "./navbar/Theme";
 import images from "../public/assets";
+import { Wallet } from "./Wallet";
 
 type CheckActiveProps = {
   active: string;
@@ -62,8 +63,7 @@ const ButtonGroup: React.FC<{
   setActive: (item: string) => void;
   router: any;
 }> = ({ setActive, router }) => {
-  const hasConnected = true;
-  return hasConnected ? (
+  return (
     <div className="flexCenter">
       <Button
         variant="default"
@@ -75,19 +75,7 @@ const ButtonGroup: React.FC<{
       >
         Create
       </Button>
-    </div>
-  ) : (
-    <div className="flexCenter">
-      <Button
-        variant="default"
-        className="mx-2 rounded-xl"
-        onClick={() => {
-          setActive("");
-          router.push("/connect-wallet");
-        }}
-      >
-        Connect Wallet
-      </Button>
+      <Wallet />
     </div>
   );
 };
