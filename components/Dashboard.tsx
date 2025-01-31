@@ -11,10 +11,14 @@ import CreatorCard from "@/components/CreatorCard";
 // import { getCreators } from "@/utils/getTopCreators";
 import { shortenAddress } from "@/utils/shortenAddress";
 import images from "@/public/assets";
-import { makeid } from "@/utils/makeId";
+// Removed: import { makeid } from "@/utils/makeId";
 import NFTCard from "./NFTCard";
 
-const Dashboard = () => {
+interface DashboardProps {
+  addresses: string[];
+}
+
+const Dashboard = ({ addresses }: DashboardProps) => {
   interface NFT {
     price: number;
     tokenId: number;
@@ -101,12 +105,12 @@ const Dashboard = () => {
             creatorEths={creator.sumall}
           />
         ))} */}
-          {[6, 7, 8, 9, 10].map((i) => (
+          {[6, 7, 8, 9, 10].map((i, idx) => (
             <CreatorCard
               key={`creator-${i}`}
               rank={i}
               creatorImage={images[`creator${i}`]}
-              creatorName={`0x${makeid(3)}...${makeid(4)}`}
+              creatorName={`0x${addresses[idx]}...${i}def`}
               creatorEths={(10 - i) * 0.534}
             />
           ))}
@@ -164,8 +168,8 @@ const Dashboard = () => {
                 i,
                 name: `Nifty NFT ${i}`,
                 price: (10 - i * 0.534).toFixed(2),
-                seller: `0x${makeid(3)}...${makeid(4)}`,
-                owner: `0x${makeid(3)}...${makeid(4)}`,
+                seller: "0x9E3...1c2f",
+                owner: "0xA45...bDe1",
                 description: "Cool NFT on Sale",
               }}
             />

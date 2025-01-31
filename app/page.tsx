@@ -1,9 +1,12 @@
 import Image from "next/image";
+import { makeid } from "@/utils/makeId";
 
 import Banner from "@/components/Banner";
 import Dashboard from "@/components/Dashboard";
 
 const Home = () => {
+  const addresses = [6, 7, 8, 9, 10].map(() => makeid(5));
+
   return (
     <div className="flex justify-center sm:px-4 p-12">
       <div className="w-full minmd:w-4/5">
@@ -20,8 +23,7 @@ const Home = () => {
           <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold ml-4 xs:ml-0">
             Best Creators{" "}
           </h1>
-
-          <Dashboard />
+          <Dashboard addresses={addresses} />
         </div>
       </div>
     </div>
