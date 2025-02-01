@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -81,7 +80,6 @@ const ButtonGroup: React.FC<{
 };
 
 const Navbar = () => {
-  const { theme, setTheme } = useTheme();
   const [active, setActive] = useState("Explore NFTs");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -155,7 +153,7 @@ const Navbar = () => {
               height={25}
               alt="menu"
               onClick={() => setIsOpen(true)}
-              className={theme === "light" ? "filter invert" : ""}
+              className="bg-nft-gray-2 dark:bg-transparent"
             />
           ) : (
             <Image
@@ -165,7 +163,7 @@ const Navbar = () => {
               height={20}
               alt="close"
               onClick={() => setIsOpen(false)}
-              className={theme === "light" ? "filter invert" : ""}
+              className="bg-nft-gray-2 dark:bg-transparent"
             />
           )}
 

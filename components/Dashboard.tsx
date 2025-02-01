@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useTheme } from "next-themes";
 import Image from "next/image";
 
 import CreatorCard from "@/components/CreatorCard";
@@ -32,8 +31,6 @@ const Dashboard = ({ addresses }: DashboardProps) => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
-
-  const { theme } = useTheme();
 
   useEffect(() => {
     const sortedNfts = [...nfts];
@@ -118,7 +115,7 @@ const Dashboard = ({ addresses }: DashboardProps) => {
             <>
               <div
                 onClick={() => handleScroll("left")}
-                className="absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer left-0"
+                className="absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer left-0 ms-4"
               >
                 <Image
                   src={images.left}

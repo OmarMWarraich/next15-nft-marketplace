@@ -5,7 +5,6 @@ import { useState, useMemo, useCallback, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
-import { useTheme } from "next-themes";
 
 import Input from "@/components/Input";
 import images from "@/public/assets";
@@ -13,7 +12,6 @@ import { Button } from "@/components/ui/button";
 
 const CreateItem = () => {
   const [fileUrl, setFileUrl] = useState(null);
-  const { theme } = useTheme();
 
   const onDrop = useCallback(async (acceptedFile: any) => {
     /* upload image to IPFS */
@@ -98,7 +96,6 @@ const CreateItem = () => {
                     height={100}
                     objectFit="contain"
                     alt="file upload"
-                    className="invert"
                   />
                 </div>
 
