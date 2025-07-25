@@ -8,8 +8,6 @@ import { Button } from "@/components/ui/button";
 import Theme from "./navbar/Theme";
 import images from "../public/assets";
 
-// type CheckActiveProps removed (unused)
-
 const NAV_ITEMS = [
   { label: "Explore NFTs", path: "/" },
   { label: "Listed NFTs", path: "/created-nfts" },
@@ -76,8 +74,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-
-  // useEffect(() => setTheme("dark"), []);
 
   useEffect(() => setActive(routeToActiveLabel[pathname] || ""), [pathname]);
   useEffect(() => {

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-// import { create as ipfsHttpClient } from "ipfs-http-client";
 import { useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
@@ -11,11 +10,7 @@ import images from "@/public/assets";
 import { Button } from "@/components/ui/button";
 
 const CreateItem = () => {
-  // fileUrl is not used, so remove it
-
-  const onDrop = useCallback(async () => {
-    /* upload image to IPFS */
-  }, []);
+  const onDrop = useCallback(async () => {}, []);
 
   const {
     getRootProps,
@@ -29,7 +24,6 @@ const CreateItem = () => {
     maxSize: 5000000,
   });
 
-  // add tailwind classes acording to the file status
   const fileStyle = useMemo(
     () =>
       `dark:bg-nft-black-1 bg-white border dark:border-white border-nft-gray-2 flex flex-col items-center p-5 rounded-sm border-dashed  
@@ -55,14 +49,6 @@ const CreateItem = () => {
       console.log("Error uploading file: ", error);
     }
   };
-
-  // if (isLoadingNFT) {
-  //   return (
-  //     <div className="flexCenter" style={{ height: "51vh" }}>
-  //       <Loader />
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="flex justify-center sm:px-4 p-12">
@@ -101,7 +87,6 @@ const CreateItem = () => {
                 </p>
               </div>
             </div>
-            {/* fileUrl preview removed as fileUrl is not used */}
           </div>
         </div>
 

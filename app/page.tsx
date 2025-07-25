@@ -1,4 +1,3 @@
-// import Image from "next/image";
 import { makeid } from "@/utils/makeId";
 
 import Banner from "@/components/Banner";

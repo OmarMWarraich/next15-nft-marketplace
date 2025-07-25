@@ -4,13 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
 import CreatorCard from "@/components/CreatorCard";
-// import NFTCard from "@/components/NFTCard";
-// import Loader from "@/components/Loader";
-
-// import { getCreators } from "@/utils/getTopCreators";
-// import { shortenAddress } from "@/utils/shortenAddress";
 import images from "@/public/assets";
-// Removed: import { makeid } from "@/utils/makeId";
 import NFTCard from "./NFTCard";
 
 interface DashboardProps {
@@ -18,18 +12,10 @@ interface DashboardProps {
 }
 
 const Dashboard = ({ addresses }: DashboardProps) => {
-  // interface NFT removed (unused)
-
-  // const [nfts, setNfts] = useState<NFT[]>([]);
-  //   const [nftsCopy, setNftsCopy] = useState<NFT[]>([]);
-  //   const [isLoading, setIsLoading] = useState(false);
   const [hideButtons, setHideButtons] = useState(false);
-  // const [activeSelect] = useState("Recently Added");
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
-
-  // Removed unused effect for sorting
 
   const handleScroll = (direction: string) => {
     const current = scrollRef.current;
@@ -61,8 +47,6 @@ const Dashboard = ({ addresses }: DashboardProps) => {
     };
   }, []);
 
-  //   const creators = getCreators(nfts);
-
   return (
     <>
       <div
@@ -73,15 +57,6 @@ const Dashboard = ({ addresses }: DashboardProps) => {
           className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none "
           ref={scrollRef}
         >
-          {/* {creators.map((creator, i) => (
-          <CreatorCard
-            key={creator.seller}
-            rank={i + 1}
-            creatorImage={images[`creator${i + 1}`]}
-            creatorName={shortenAddress(creator.seller)}
-            creatorEths={creator.sumall}
-          />
-        ))} */}
           {[6, 7, 8, 9, 10].map((i, idx) => (
             <CreatorCard
               key={`creator-${i}`}
@@ -125,19 +100,9 @@ const Dashboard = ({ addresses }: DashboardProps) => {
             Hot Bids
           </h1>
 
-          <div className="flex-2 sm:w-full flex flex-row sm:flex-col">
-            {/* <SearchBar
-              activeSelect={activeSelect}
-              setActiveSelect={setActiveSelect}
-              handleSearch={onHandleSearch}
-              clearSearch={onClearSearch}
-            /> */}
-          </div>
+          <div className="flex-2 sm:w-full flex flex-row sm:flex-col"></div>
         </div>
         <div className="mt-3 w-full flex flex-wrap justify-center">
-          {/* {nfts.map((nft) => (
-            <NFTCard key={nft.tokenId} nft={nft} />
-          ))} */}
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
             <NFTCard
               key={`nft-${i}`}

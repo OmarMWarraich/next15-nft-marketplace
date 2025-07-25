@@ -4,8 +4,6 @@ import NFTCard from "@/components/NFTCard";
 import { makeid } from "@/utils/makeId";
 
 const CreatorDashboard = () => {
-  // ...existing code...
-
   return (
     <div className="flex justify-center sm:px-4 p-12 min-h-screen">
       <div className="w-full minmd:w-4/5">
