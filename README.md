@@ -106,7 +106,7 @@ config/             # App and contract config
 
 ## License
 
-MIT
+[MIT](./LICENSE)
 
 ---
 
