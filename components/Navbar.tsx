@@ -7,7 +7,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Theme from "./navbar/Theme";
 import images from "../public/assets";
-import { Wallet } from "./Wallet";
 
 type CheckActiveProps = {
   active: string;
@@ -74,7 +73,6 @@ const ButtonGroup: React.FC<{
       >
         Create
       </Button>
-      <Wallet />
     </div>
   );
 };

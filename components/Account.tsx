@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppKitAccount } from "@reown/appkit/react";
 import {
   Carousel,
   CarouselContent,
@@ -11,14 +10,6 @@ import {
 import { Card, CardContent } from "./ui/card";
 
 export const Account: React.FC = () => {
-  const {
-    isConnected,
-    address,
-    caipAddress,
-    status,
-    embeddedWalletInfo,
-    allAccounts,
-  } = useAppKitAccount();
   return (
     <Carousel className="w-full max-w-md mx-auto">
       <CarouselContent className="-mt-1">
@@ -32,11 +23,7 @@ export const Account: React.FC = () => {
                       <h6>Connected</h6>
                     </b>
                   </i>{" "}
-                  :{" "}
-                  <span className="break-all">
-                    {" "}
-                    {isConnected ? "Connected" : "Not Connected"}
-                  </span>
+                  : <span className="break-all"> </span>
                 </span>
               </CardContent>
             </Card>
@@ -51,7 +38,7 @@ export const Account: React.FC = () => {
                   <i>
                     <b>Address</b>
                   </i>{" "}
-                  : <span className="break-all">{address}</span>
+                  : <span className="break-all">Address</span>
                 </span>
               </CardContent>
             </Card>
@@ -66,7 +53,7 @@ export const Account: React.FC = () => {
                   <i>
                     <b>CaipAddress</b>
                   </i>{" "}
-                  : <span className="break-all">{caipAddress}</span>
+                  : <span className="break-all">caipAddress</span>
                 </span>
               </CardContent>
             </Card>
@@ -93,11 +80,7 @@ export const Account: React.FC = () => {
                   <i>
                     <b>Wallet Info</b>
                   </i>
-                  <code>
-                    {embeddedWalletInfo
-                      ? JSON.stringify(embeddedWalletInfo, null, 2)
-                      : "No Wallet Info"}
-                  </code>
+                  <code>{}</code>
                 </span>
               </CardContent>
             </Card>
@@ -112,12 +95,7 @@ export const Account: React.FC = () => {
                   <i>
                     <b>Accounts</b>
                   </i>{" "}
-                  :{" "}
-                  <span className="break-all">
-                    {allAccounts.map((account, index) => (
-                      <div key={index}>{JSON.stringify(account, null, 2)}</div>
-                    ))}
-                  </span>
+                  : <span className="break-all"></span>
                 </span>
               </CardContent>
             </Card>

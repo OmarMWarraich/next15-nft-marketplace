@@ -6,7 +6,6 @@ import Navbar from "../components/Navbar";
 import Footer from "@/components/Footer";
 
 import { headers } from "next/headers";
-import ContextProvider from "@/context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,13 +37,11 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider attribute="class">
-          <ContextProvider cookies={cookies}>
-            <Navbar />
-            <section className="flex flex-1 flex-col px-6 pb-6 pt-36 max-md:pb-14 sm:px-14">
-              <div className="mx-auto w-full">{children}</div>
-            </section>
-            <Footer />
-          </ContextProvider>
+          <Navbar />
+          <section className="flex flex-1 flex-col px-6 pb-6 pt-36 max-md:pb-14 sm:px-14">
+            <div className="mx-auto w-full">{children}</div>
+          </section>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
