@@ -1,13 +1,23 @@
-import React from "react";
+"use client";
+import React, { Suspense } from "react";
 import { Account } from "@/components/Account";
+import { useSearchParams } from "next/navigation";
 
-type Props = {};
-
-const PaymentBodyCmp = (props: Props) => {
+const PaymentBodyCmpInner = () => {
+  const searchParams = useSearchParams();
+  const status = searchParams.get("status") || "";
   return (
     <div>
-      <Account />
+      <Account status={status} />
     </div>
+  );
+};
+
+const PaymentBodyCmp = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PaymentBodyCmpInner />
+    </Suspense>
   );
 };
 

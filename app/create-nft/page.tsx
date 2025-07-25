@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useContext } from "react";
-// import { create as ipfsHttpClient } from "ipfs-http-client";
+import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
@@ -11,11 +10,7 @@ import images from "@/public/assets";
 import { Button } from "@/components/ui/button";
 
 const CreateItem = () => {
-  const [fileUrl, setFileUrl] = useState(null);
-
-  const onDrop = useCallback(async (acceptedFile: any) => {
-    /* upload image to IPFS */
-  }, []);
+  const onDrop = useCallback(async () => {}, []);
 
   const {
     getRootProps,
@@ -29,7 +24,6 @@ const CreateItem = () => {
     maxSize: 5000000,
   });
 
-  // add tailwind classes acording to the file status
   const fileStyle = useMemo(
     () =>
       `dark:bg-nft-black-1 bg-white border dark:border-white border-nft-gray-2 flex flex-col items-center p-5 rounded-sm border-dashed  
@@ -48,27 +42,13 @@ const CreateItem = () => {
 
   const createMarket = async () => {
     const { name, description, price } = formInput;
-    if (!name || !description || !price || !fileUrl) return;
-    /* first, upload to IPFS */
-    const data = JSON.stringify({ name, description, image: fileUrl });
+    if (!name || !description || !price) return;
     try {
-      // const added = await client.add(data);
-      // const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-      // await createSale(url, formInput.price);
       router.push("/");
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
   };
-
-  // if (isLoadingNFT) {
-  //   return (
-  //     <div className="flexCenter" style={{ height: "51vh" }}>
-  //       <Loader />
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="flex justify-center sm:px-4 p-12">
@@ -107,13 +87,6 @@ const CreateItem = () => {
                 </p>
               </div>
             </div>
-            {fileUrl && (
-              <aside>
-                <div>
-                  <img src={fileUrl} alt="Asset_file" />
-                </div>
-              </aside>
-            )}
           </div>
         </div>
 
@@ -121,27 +94,27 @@ const CreateItem = () => {
           inputType="input"
           title="Name"
           placeholder="Asset Name"
-          handleClick={(e: { target: { value: any } }) =>
-            updateFormInput({ ...formInput, name: e.target.value })
-          }
+          handleClick={(
+            e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => updateFormInput({ ...formInput, name: e.target.value })}
         />
 
         <Input
           inputType="textarea"
           title="Description"
           placeholder="Asset Description"
-          handleClick={(e: { target: { value: any } }) =>
-            updateFormInput({ ...formInput, description: e.target.value })
-          }
+          handleClick={(
+            e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => updateFormInput({ ...formInput, description: e.target.value })}
         />
 
         <Input
           inputType="number"
           title="Price"
           placeholder="Asset Price"
-          handleClick={(e: { target: { value: any } }) =>
-            updateFormInput({ ...formInput, price: e.target.value })
-          }
+          handleClick={(
+            e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => updateFormInput({ ...formInput, price: e.target.value })}
         />
 
         <div className="mt-7 w-full flex justify-end">

@@ -1,9 +1,5 @@
 import React from "react";
 
-type Props = {};
-
-const ResellNFT = (props: Props) => {
-  return <div>ResellNFT</div>;
-};
+const ResellNFT = () => <div>ResellNFT</div>;
 
 export default ResellNFT;

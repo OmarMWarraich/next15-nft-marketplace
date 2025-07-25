@@ -9,7 +9,11 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "./ui/card";
 
-export const Account: React.FC = () => {
+type AccountProps = {
+  status: string;
+};
+
+export const Account = ({ status }: AccountProps) => {
   return (
     <Carousel className="w-full max-w-md mx-auto">
       <CarouselContent className="-mt-1">
@@ -21,6 +25,7 @@ export const Account: React.FC = () => {
                   <i>
                     <b>
                       <h6>Connected</h6>
+                      <div>Status: {status}</div>
                     </b>
                   </i>{" "}
                   : <span className="break-all"> </span>
