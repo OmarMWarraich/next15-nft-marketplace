@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Build and lint project after dependency removal",
+      "command": "npm run build && npm run lint",
+      "group": "build"
+    }
+  ]
+}
