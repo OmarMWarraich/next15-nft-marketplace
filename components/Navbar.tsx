@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Theme from "./navbar/Theme";
+import ThirdwebConnect from "./ThirdwebConnect";
 import images from "../public/assets";
 
 const NAV_ITEMS = [
@@ -131,6 +132,9 @@ const Navbar = () => {
         </div>
 
         <Theme />
+        <div className="ml-4">
+          <ThirdwebConnect />
+        </div>
 
         <div className="hidden md:flex ml-2">
           {!isOpen ? (
