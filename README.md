@@ -90,11 +90,45 @@ config/             # App and contract config
 - `tailwind.config.ts`: Custom Tailwind theme.
 - `hardhat.config.ts`: Hardhat project config.
 
+## Authentication (thirdweb)
+
+This project uses [thirdweb](https://portal.thirdweb.com/wallets/auth) for secure, web3-native authentication and wallet connection.
+
+### Setup
+
+1. Install the thirdweb package:
+
+   ```bash
+   npm install thirdweb
+   ```
+
+2. Add the following environment variables to `.env.local`:
+
+   ```env
+   NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN=localhost
+   NEXT_PUBLIC_THIRDWEB_CLIENT_ID=your-client-id-here
+   THIRDWEB_SECRET_KEY=your-secret-key-here
+   AUTH_PRIVATE_KEY=your-auth-private-key-here
+   ```
+
+   - Get your client ID and secret key from [thirdweb dashboard](https://thirdweb.com/create-api-key).
+   - The private key can be any valid Ethereum private key (no funds required).
+
+3. The app is wrapped in `ThirdwebProvider` (`lib/ThirdwebProvider.tsx`) in `app/layout.tsx`.
+4. The wallet connect/auth UI is provided by `ConnectButton` in `components/ThirdwebConnect.tsx`, used in the Navbar.
+5. Server actions for authentication are implemented in `actions/login.ts` and wired to the ConnectButton's `auth` prop.
+
+### Usage
+
+- Users can connect their wallet and sign in using the Connect button in the Navbar.
+- Authentication/session logic is handled via server actions (`getLoginPayload`, `doLogin`, `isLoggedIn`, `doLogout`).
+- You can extend these actions to integrate with your backend/session store as needed.
+
 ## Customization
 
 - **Theming**: Edit `tailwind.config.ts` and `ThemeProvider` in `app/layout.tsx`.
 - **Smart Contracts**: Extend `NFTMarketplace.sol` for royalties, auctions, etc.
-- **Wallet Integration**: Add wallet connection logic in `components/Account.tsx` or similar.
+- **Wallet Integration**: Extend or customize thirdweb authentication in `components/ThirdwebConnect.tsx` and `actions/login.ts`.
 
 ## Contributing
 

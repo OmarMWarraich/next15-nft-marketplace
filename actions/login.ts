@@ -5,7 +5,11 @@
 export async function getLoginPayload(params: { address: string }) {
   // TODO: Implement server logic to generate login payload for address
   // Example usage of params to avoid unused variable error
-  return { address: params.address };
+  // Generate a unique nonce for this login attempt
+  const nonce =
+    Math.random().toString(36).substring(2) + Date.now().toString(36);
+  // In production, store the nonce in your database/session for later verification
+  return { address: params.address, nonce };
 }
 
 export async function doLogin(params: { payload: string; signature: string }) {
