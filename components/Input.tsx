@@ -1,4 +1,4 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 
 // import { NFTContext } from "../context/NFTContext";
 
@@ -6,7 +6,9 @@ type InputProps = {
   inputType: "text" | "number" | "textarea" | "input";
   title: string;
   placeholder: string;
-  handleClick?: (e: any) => void;
+  handleClick?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 };
 
 const Input = ({ inputType, title, placeholder, handleClick }: InputProps) => {

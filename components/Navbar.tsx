@@ -8,11 +8,7 @@ import { Button } from "@/components/ui/button";
 import Theme from "./navbar/Theme";
 import images from "../public/assets";
 
-type CheckActiveProps = {
-  active: string;
-  setActive: (item: string) => void;
-  router: any;
-};
+// type CheckActiveProps removed (unused)
 
 const NAV_ITEMS = [
   { label: "Explore NFTs", path: "/" },
@@ -59,23 +55,21 @@ const MenuItems: React.FC<{
 
 const ButtonGroup: React.FC<{
   setActive: (item: string) => void;
-  router: any;
-}> = ({ setActive, router }) => {
-  return (
-    <div className="flexCenter">
-      <Button
-        variant="default"
-        className="mx-2 rounded-xl"
-        onClick={() => {
-          setActive("");
-          router.push("/create-nft");
-        }}
-      >
-        Create
-      </Button>
-    </div>
-  );
-};
+  router: ReturnType<typeof useRouter>;
+}> = ({ setActive, router }) => (
+  <div className="flexCenter">
+    <Button
+      variant="default"
+      className="mx-2 rounded-xl"
+      onClick={() => {
+        setActive("");
+        router.push("/create-nft");
+      }}
+    >
+      Create
+    </Button>
+  </div>
+);
 
 const Navbar = () => {
   const [active, setActive] = useState("Explore NFTs");

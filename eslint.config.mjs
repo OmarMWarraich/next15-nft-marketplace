@@ -1,30 +1,20 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
-
+// eslint-disable-next-line no-underscore-dangle
 const __filename = fileURLToPath(import.meta.url);
+// eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname(__filename);
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
+// eslint-disable-next-line
+export default [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
-    env: {
-      browser: true,
-      es2021: true,
-    },
-    extends: ["plugin:react/recommended", "airbnb"],
-    parserOptions: {
-      ecmaFeatures: {
-        jsx: true,
-      },
-      ecmaVersion: 12,
-      sourceType: "module",
-    },
-    plugins: ["react"],
+    plugins: { react: (await import("eslint-plugin-react")).default },
     rules: {
       "no-console": 0,
       "jsx-a11y/label-has-associated-control": 0,
@@ -80,5 +70,3 @@ const eslintConfig = [
     },
   },
 ];
-
-export default eslintConfig;

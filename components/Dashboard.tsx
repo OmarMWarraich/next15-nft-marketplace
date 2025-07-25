@@ -8,7 +8,7 @@ import CreatorCard from "@/components/CreatorCard";
 // import Loader from "@/components/Loader";
 
 // import { getCreators } from "@/utils/getTopCreators";
-import { shortenAddress } from "@/utils/shortenAddress";
+// import { shortenAddress } from "@/utils/shortenAddress";
 import images from "@/public/assets";
 // Removed: import { makeid } from "@/utils/makeId";
 import NFTCard from "./NFTCard";
@@ -18,44 +18,23 @@ interface DashboardProps {
 }
 
 const Dashboard = ({ addresses }: DashboardProps) => {
-  interface NFT {
-    price: number;
-    tokenId: number;
-  }
+  // interface NFT removed (unused)
 
-  const [nfts, setNfts] = useState<NFT[]>([]);
+  // const [nfts, setNfts] = useState<NFT[]>([]);
   //   const [nftsCopy, setNftsCopy] = useState<NFT[]>([]);
   //   const [isLoading, setIsLoading] = useState(false);
   const [hideButtons, setHideButtons] = useState(false);
-  const [activeSelect, setActiveSelect] = useState("Recently Added");
+  // const [activeSelect] = useState("Recently Added");
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const sortedNfts = [...nfts];
-
-    switch (activeSelect) {
-      case "Price (low to high)":
-        setNfts(sortedNfts.sort((a, b) => a.price - b.price));
-        break;
-      case "Price (high to low)":
-        setNfts(sortedNfts.sort((a, b) => b.price - a.price));
-        break;
-      case "Recently added":
-        setNfts(sortedNfts.sort((a, b) => b.tokenId - a.tokenId));
-        break;
-      default:
-        setNfts(nfts);
-        break;
-    }
-  }, [activeSelect]);
+  // Removed unused effect for sorting
 
   const handleScroll = (direction: string) => {
-    const current = scrollRef.current as HTMLDivElement;
-
+    const current = scrollRef.current;
+    if (!current) return;
     const scrollAmount = window.innerWidth > 1800 ? 270 : 210;
-
     if (direction === "left") {
       current.scrollLeft -= scrollAmount;
     } else {
@@ -64,22 +43,23 @@ const Dashboard = ({ addresses }: DashboardProps) => {
   };
 
   const isScrollable = () => {
-    const current = scrollRef.current as HTMLDivElement;
-    const parent = parentRef.current as HTMLDivElement;
-
-    if (current?.scrollWidth >= parent?.offsetWidth)
-      return setHideButtons(false);
-    setHideButtons(true);
+    const current = scrollRef.current;
+    const parent = parentRef.current;
+    if (!current || !parent) return;
+    if (current.scrollWidth >= parent.offsetWidth) {
+      setHideButtons(false);
+    } else {
+      setHideButtons(true);
+    }
   };
 
   useEffect(() => {
     isScrollable();
     window.addEventListener("resize", isScrollable);
-
     return () => {
       window.removeEventListener("resize", isScrollable);
     };
-  }, [nfts]);
+  }, []);
 
   //   const creators = getCreators(nfts);
 

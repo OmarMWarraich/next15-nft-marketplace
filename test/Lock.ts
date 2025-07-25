@@ -78,7 +78,8 @@ describe("Lock", function () {
         await time.increaseTo(unlockTime);
 
         // We use lock.connect() to send a transaction from another account
-        await expect(lock.connect(otherAccount).withdraw()).to.be.revertedWith(
+        const lockConnected = lock.connect(otherAccount) as typeof lock;
+        await expect(lockConnected.withdraw()).to.be.revertedWith(
           "You aren't the owner"
         );
       });

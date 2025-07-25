@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useContext } from "react";
+import { useState, useMemo, useCallback } from "react";
 // import { create as ipfsHttpClient } from "ipfs-http-client";
 import { useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
@@ -11,9 +11,9 @@ import images from "@/public/assets";
 import { Button } from "@/components/ui/button";
 
 const CreateItem = () => {
-  const [fileUrl, setFileUrl] = useState(null);
+  // fileUrl is not used, so remove it
 
-  const onDrop = useCallback(async (acceptedFile: any) => {
+  const onDrop = useCallback(async () => {
     /* upload image to IPFS */
   }, []);
 
@@ -48,14 +48,8 @@ const CreateItem = () => {
 
   const createMarket = async () => {
     const { name, description, price } = formInput;
-    if (!name || !description || !price || !fileUrl) return;
-    /* first, upload to IPFS */
-    const data = JSON.stringify({ name, description, image: fileUrl });
+    if (!name || !description || !price) return;
     try {
-      // const added = await client.add(data);
-      // const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-      // await createSale(url, formInput.price);
       router.push("/");
     } catch (error) {
       console.log("Error uploading file: ", error);
@@ -107,13 +101,7 @@ const CreateItem = () => {
                 </p>
               </div>
             </div>
-            {fileUrl && (
-              <aside>
-                <div>
-                  <img src={fileUrl} alt="Asset_file" />
-                </div>
-              </aside>
-            )}
+            {/* fileUrl preview removed as fileUrl is not used */}
           </div>
         </div>
 
@@ -121,27 +109,27 @@ const CreateItem = () => {
           inputType="input"
           title="Name"
           placeholder="Asset Name"
-          handleClick={(e: { target: { value: any } }) =>
-            updateFormInput({ ...formInput, name: e.target.value })
-          }
+          handleClick={(
+            e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => updateFormInput({ ...formInput, name: e.target.value })}
         />
 
         <Input
           inputType="textarea"
           title="Description"
           placeholder="Asset Description"
-          handleClick={(e: { target: { value: any } }) =>
-            updateFormInput({ ...formInput, description: e.target.value })
-          }
+          handleClick={(
+            e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => updateFormInput({ ...formInput, description: e.target.value })}
         />
 
         <Input
           inputType="number"
           title="Price"
           placeholder="Asset Price"
-          handleClick={(e: { target: { value: any } }) =>
-            updateFormInput({ ...formInput, price: e.target.value })
-          }
+          handleClick={(
+            e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => updateFormInput({ ...formInput, price: e.target.value })}
         />
 
         <div className="mt-7 w-full flex justify-end">
