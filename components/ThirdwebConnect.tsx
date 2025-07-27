@@ -1,6 +1,6 @@
-import { createThirdwebClient } from "thirdweb";
 import { ConnectButton } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
+import { client } from "../lib/client";
 
 const wallets = [
   inAppWallet(),
@@ -8,15 +8,6 @@ const wallets = [
   createWallet("com.coinbase.wallet"),
   createWallet("me.rainbow"),
 ];
-
-const secretKey = process.env.THIRDWEB_SECRET_KEY;
-const clientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
-
-const client = createThirdwebClient(
-  secretKey && secretKey !== ""
-    ? { secretKey, clientId }
-    : { clientId: clientId as string }
-);
 
 const ThirdwebConnect = () => {
   return (
