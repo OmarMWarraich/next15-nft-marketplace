@@ -4,13 +4,34 @@ import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
+import { getContract, readContract } from "thirdweb";
+import {
+  useActiveAccount,
+  useActiveWalletChain,
+  useSendTransaction,
+} from "thirdweb/react";
 
 import Input from "@/components/Input";
 import images from "@/public/assets";
 import { Button } from "@/components/ui/button";
+import { uploadNftMetadata } from "@/lib/thirdwebStorage";
+import { client } from "@/lib/client";
+import { localChain } from "@/lib/chain";
+import { MarketAddress, MarketAddressABI } from "@/context/constants";
+import { prepareCreateTokenTx } from "@/lib/marketplaceTx";
 
 const CreateItem = () => {
-  const onDrop = useCallback(async () => {}, []);
+  const [file, setFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const account = useActiveAccount();
+  const activeChain = useActiveWalletChain();
+  const { mutateAsync: sendTransaction } = useSendTransaction();
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    setError(null);
+    setFile(acceptedFiles?.[0] ?? null);
+  }, []);
 
   const {
     getRootProps,
@@ -42,11 +63,62 @@ const CreateItem = () => {
 
   const createMarket = async () => {
     const { name, description, price } = formInput;
-    if (!name || !description || !price) return;
+    if (!name || !description || !price || !file) return;
     try {
+      setIsSubmitting(true);
+      setError(null);
+
+      if (!account) {
+        throw new Error("Please connect your wallet first.");
+      }
+
+      if (!activeChain || activeChain.id !== localChain.id) {
+        throw new Error(
+          `Please switch your wallet network to ${localChain.name} (${localChain.id}).`
+        );
+      }
+
+      const { tokenUri } = await uploadNftMetadata({
+        name,
+        description,
+        imageFile: file,
+      });
+
+      const contract = getContract({
+        client,
+        chain: localChain,
+        address: MarketAddress,
+        abi: MarketAddressABI,
+      });
+
+      const listingFeeWei = await readContract({
+        contract,
+        method: "function getListingPrice() view returns (uint256)",
+      });
+
+      const tx = prepareCreateTokenTx({
+        contract,
+        tokenUri,
+        priceEth: price,
+        listingFeeWei,
+      });
+
+      await sendTransaction(tx);
+
       router.push("/");
     } catch (error) {
       console.log("Error uploading file: ", error);
+
+      const message = error instanceof Error ? error.message : "Upload failed";
+      if (message.includes('Cannot decode zero data ("0x")')) {
+        setError(
+          `Marketplace contract call returned empty data. This usually means the contract isn't deployed at ${MarketAddress} on ${localChain.name} (${localChain.id}) or the RPC URL is wrong. If needed, set NEXT_PUBLIC_MARKET_ADDRESS and/or NEXT_PUBLIC_LOCAL_RPC_URL in .env.local, then restart dev server.`
+        );
+      } else {
+        setError(message);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -85,6 +157,18 @@ const CreateItem = () => {
                 <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-sm mt-2">
                   Or browse media on your device
                 </p>
+
+                {file && (
+                  <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-sm mt-4">
+                    Selected: {file.name}
+                  </p>
+                )}
+
+                {error && (
+                  <p className="font-poppins text-file-reject font-semibold text-sm mt-4">
+                    {error}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -122,8 +206,9 @@ const CreateItem = () => {
             variant="default"
             className="rounded-xl"
             onClick={createMarket}
+            disabled={isSubmitting}
           >
-            Create Item
+            {isSubmitting ? "Creating..." : "Create Item"}
           </Button>
         </div>
       </div>
