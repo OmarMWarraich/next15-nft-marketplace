@@ -7,6 +7,9 @@
 /typechain
 /typechain-types
 
+# Hardhat v3 TypeChain output (via @nomicfoundation/hardhat-typechain)
+/types/ethers-contracts
+
 # solidity-coverage files
 /coverage.json
 
@@ -54,3 +57,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.github

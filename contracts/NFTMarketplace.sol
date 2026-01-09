@@ -1,4 +1,5 @@
-pragma solidity ^0.8.4; // set version to match with waht we have in our hardhat configuration
+// SPDX-License-Identifier: MIT 
+pragma solidity ^0.8.4; // set version to match with what we have in our hardhat configuration
 
 // Using ERC721 standard
 // Functionality we can use
@@ -13,7 +14,7 @@ import "hardhat/console.sol";
 
 // Creating our contract ->Inherited from ERC721URIStorage
 contract NFTMarketplace is ERC721URIStorage {
-    // allows us to use the coutner utility.
+    // allows us to use the counter utility.
     using Counters for Counters.Counter;
     // when the first token is minted it'll get a value of zero, the second one is one
     // and then using counters this we'll increment token ids
@@ -25,7 +26,7 @@ contract NFTMarketplace is ERC721URIStorage {
     uint256 listingPrice = 0.025 ether;
 
     // declaring the owner of the contract
-    // owner earns a commision on every item sold
+    // owner earns a commission on every item sold
     address payable owner;
 
     // keeping up with all the items that have been created
@@ -135,13 +136,18 @@ contract NFTMarketplace is ERC721URIStorage {
       require(msg.value == price, "Please submit the asking price in order to complete the purchase");
       idToMarketItem[tokenId].owner = payable(msg.sender);
       idToMarketItem[tokenId].sold = true;
-      idToMarketItem[tokenId].seller = payable(address(0));
       _itemsSold.increment();
 
       // next, we want to transfer the NFT ownership from the seller to the buyer
       _transfer(address(this), msg.sender, tokenId);
-      payable(owner).transfer(listingPrice);
-      payable(idToMarketItem[tokenId].seller).transfer(msg.value);
+
+      (bool ownerSuccess, ) = payable(owner).call{value: listingPrice}("");
+      require(ownerSuccess, "Failed to send listing fee to owner");
+
+      (bool sellerSuccess, ) = payable(idToMarketItem[tokenId].seller).call{value: msg.value}("");
+      require(sellerSuccess, "Failed to send payment to seller");
+      
+      idToMarketItem[tokenId].seller = payable(address(0));
     }
 
     /* Returns all unsold market items */

@@ -9,7 +9,7 @@ A modern, full-stack NFT marketplace built with Next.js 15, React 19, TypeScript
 - 🖼️ **NFT Minting & Listing**: Create, list, and resell NFTs with image upload and metadata.
 - 🛒 **Marketplace**: Browse, buy, and sell NFTs with real-time updates.
 - 👤 **Creator Dashboard**: View your created and listed NFTs.
-- 🔒 **Smart Contracts**: Secure, upgradeable contracts using Hardhat and OpenZeppelin.
+- 🔒 **Smart Contracts**: Secure contracts using Hardhat and OpenZeppelin.
 - 🧪 **Testing**: Comprehensive smart contract tests with Hardhat and Chai.
 - 🌗 **Theming**: Light/dark mode with persistent user preference.
 - 🔗 **Wallet Integration**: (Pluggable, see code for extension points).
@@ -26,7 +26,7 @@ A modern, full-stack NFT marketplace built with Next.js 15, React 19, TypeScript
 
 ### Prerequisites
 
-- Node.js (v18+ recommended)
+- Node.js (v22+ required for Hardhat 3)
 - npm (v9+)
 - [Hardhat](https://hardhat.org/)
 - (Optional) Metamask or compatible Ethereum wallet
@@ -92,31 +92,29 @@ config/             # App and contract config
 
 ## Authentication (thirdweb)
 
-This project uses [thirdweb](https://portal.thirdweb.com/wallets/auth) for secure, web3-native authentication and wallet connection.
+This project uses [thirdweb](https://portal.thirdweb.com/) for wallet connection. thirdweb Auth is scaffolded but not fully wired in the UI.
 
 ### Setup
 
-1. Install the thirdweb package:
+1. Add the following environment variables to `.env.local`:
 
-   ```bash
-   npm install thirdweb
+   ```env
+   NEXT_PUBLIC_THIRDWEB_CLIENT_ID=your-client-id-here
    ```
 
-2. Add the following environment variables to `.env.local`:
+   - Get your client ID from [thirdweb dashboard](https://thirdweb.com/create-api-key).
+
+2. (Optional) If you later wire thirdweb Auth, you'll also need server-side secrets:
 
    ```env
    NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN=localhost
-   NEXT_PUBLIC_THIRDWEB_CLIENT_ID=your-client-id-here
    THIRDWEB_SECRET_KEY=your-secret-key-here
    AUTH_PRIVATE_KEY=your-auth-private-key-here
    ```
 
-   - Get your client ID and secret key from [thirdweb dashboard](https://thirdweb.com/create-api-key).
-   - The private key can be any valid Ethereum private key (no funds required).
-
 3. The app is wrapped in `ThirdwebProvider` (`lib/ThirdwebProvider.tsx`) in `app/layout.tsx`.
-4. The wallet connect/auth UI is provided by `ConnectButton` in `components/ThirdwebConnect.tsx`, used in the Navbar.
-5. Server actions for authentication are implemented in `actions/login.ts` and wired to the ConnectButton's `auth` prop.
+4. The wallet connect UI is provided by `ConnectButton` in `components/ThirdwebConnect.tsx`, used in the Navbar.
+5. Server actions for authentication are scaffolded in `actions/login.ts`, but `ConnectButton` is not currently configured with an `auth` prop.
 
 ### Usage
 
