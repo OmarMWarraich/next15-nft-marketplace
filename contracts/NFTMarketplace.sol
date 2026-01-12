@@ -1,19 +1,18 @@
-// SPDX-License-Identifier: MIT 
-pragma solidity ^0.8.4; // set version to match with what we have in our hardhat configuration
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.28;
 
 // Using ERC721 standard
 // Functionality we can use
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-
-import "hardhat/console.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 // public means available from the client application
 // view means it's not doing any transaction work
 
 // Creating our contract ->Inherited from ERC721URIStorage
-contract NFTMarketplace is ERC721URIStorage {
+contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
     // allows us to use the counter utility.
     using Counters for Counters.Counter;
     // when the first token is minted it'll get a value of zero, the second one is one
@@ -52,6 +51,31 @@ contract NFTMarketplace is ERC721URIStorage {
       bool sold
     );
 
+    event MarketItemSold(
+      uint256 indexed tokenId,
+      address indexed seller,
+      address indexed buyer,
+      uint256 price
+    );
+
+    event MarketItemRelisted(
+      uint256 indexed tokenId,
+      address indexed seller,
+      uint256 price
+    );
+
+    event MarketItemCancelled(
+      uint256 indexed tokenId,
+      address indexed seller
+    );
+
+    event MarketItemPriceUpdated(
+      uint256 indexed tokenId,
+      address indexed seller,
+      uint256 oldPrice,
+      uint256 newPrice
+    );
+
     // set the owner as the msg.sender
     // the owner of the contract is the one deploying it
     constructor() ERC721("Metaverse Tokens", "METT") {
@@ -69,6 +93,11 @@ contract NFTMarketplace is ERC721URIStorage {
     // so we call the contract and get the listing price and make sure we're sending the right amount of payment
     function getListingPrice() public view returns (uint256) {
       return listingPrice;
+    }
+
+    function getMarketItem(uint256 tokenId) public view returns (MarketItem memory) {
+      require(_exists(tokenId), "Token does not exist");
+      return idToMarketItem[tokenId];
     }
 
     /* Mints a token and lists it in the marketplace */
@@ -116,9 +145,21 @@ contract NFTMarketplace is ERC721URIStorage {
       );
     }
 
+    function _requireListed(uint256 tokenId) private view {
+      require(_exists(tokenId), "Token does not exist");
+      require(idToMarketItem[tokenId].owner == address(this), "Item is not listed");
+      require(ownerOf(tokenId) == address(this), "NFT is not in escrow");
+      require(idToMarketItem[tokenId].sold == false, "Item is not available");
+      require(idToMarketItem[tokenId].seller != address(0), "Item has no seller");
+      require(idToMarketItem[tokenId].price > 0, "Item has no price");
+    }
+
     /* allows someone to resell a token they have purchased */
     function resellToken(uint256 tokenId, uint256 price) public payable {
+      require(_exists(tokenId), "Token does not exist");
       require(idToMarketItem[tokenId].owner == msg.sender, "Only item owner can perform this operation");
+      require(ownerOf(tokenId) == msg.sender, "Caller is not ERC721 owner");
+      require(price > 0, "Price must be at least 1 wei");
       require(msg.value == listingPrice, "Price must be equal to listing price");
       idToMarketItem[tokenId].sold = false;
       idToMarketItem[tokenId].price = price;
@@ -127,15 +168,49 @@ contract NFTMarketplace is ERC721URIStorage {
       _itemsSold.decrement();
 
       _transfer(msg.sender, address(this), tokenId);
+
+      emit MarketItemRelisted(tokenId, msg.sender, price);
+    }
+
+    function cancelMarketItem(uint256 tokenId) public nonReentrant {
+      _requireListed(tokenId);
+      require(idToMarketItem[tokenId].seller == msg.sender, "Only seller can cancel listing");
+
+      idToMarketItem[tokenId].owner = payable(msg.sender);
+      idToMarketItem[tokenId].sold = true;
+      idToMarketItem[tokenId].seller = payable(address(0));
+      idToMarketItem[tokenId].price = 0;
+      _itemsSold.increment();
+
+      _transfer(address(this), msg.sender, tokenId);
+
+      emit MarketItemCancelled(tokenId, msg.sender);
+    }
+
+    function updateMarketItemPrice(uint256 tokenId, uint256 newPrice) public {
+      _requireListed(tokenId);
+      require(idToMarketItem[tokenId].seller == msg.sender, "Only seller can update price");
+      require(newPrice > 0, "Price must be at least 1 wei");
+
+      uint256 oldPrice = idToMarketItem[tokenId].price;
+      idToMarketItem[tokenId].price = newPrice;
+
+      emit MarketItemPriceUpdated(tokenId, msg.sender, oldPrice, newPrice);
     }
 
     /* Creates the sale of a marketplace item */
     /* Transfers ownership of the item, as well as funds between parties */
-    function createMarketSale(uint256 tokenId) public payable {
-      uint price = idToMarketItem[tokenId].price;
+    function createMarketSale(uint256 tokenId) public payable nonReentrant {
+      _requireListed(tokenId);
+      uint256 price = idToMarketItem[tokenId].price;
+      address payable seller = idToMarketItem[tokenId].seller;
+
       require(msg.value == price, "Please submit the asking price in order to complete the purchase");
+      require(msg.sender != seller, "Seller cannot buy their own NFT");
+
       idToMarketItem[tokenId].owner = payable(msg.sender);
       idToMarketItem[tokenId].sold = true;
+      idToMarketItem[tokenId].seller = payable(address(0));
       _itemsSold.increment();
 
       // next, we want to transfer the NFT ownership from the seller to the buyer
@@ -144,10 +219,10 @@ contract NFTMarketplace is ERC721URIStorage {
       (bool ownerSuccess, ) = payable(owner).call{value: listingPrice}("");
       require(ownerSuccess, "Failed to send listing fee to owner");
 
-      (bool sellerSuccess, ) = payable(idToMarketItem[tokenId].seller).call{value: msg.value}("");
+      (bool sellerSuccess, ) = seller.call{value: price}("");
       require(sellerSuccess, "Failed to send payment to seller");
-      
-      idToMarketItem[tokenId].seller = payable(address(0));
+
+      emit MarketItemSold(tokenId, seller, msg.sender, price);
     }
 
     /* Returns all unsold market items */
