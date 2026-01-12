@@ -1,4 +1,4 @@
-import { upload } from "thirdweb/storage";
+import { resolveScheme, upload } from "thirdweb/storage";
 
 import { client } from "./client";
 
@@ -34,4 +34,14 @@ export async function uploadNftMetadata({
   });
 
   return { tokenUri, imageUri };
+}
+
+export function resolveIpfsUri(uri: string): string {
+  if (!uri) return uri;
+
+  try {
+    return resolveScheme({ client, uri });
+  } catch {
+    return uri;
+  }
 }

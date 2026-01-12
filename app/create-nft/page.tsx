@@ -14,7 +14,7 @@ import {
 import Input from "@/components/Input";
 import images from "@/public/assets";
 import { Button } from "@/components/ui/button";
-import { uploadNftMetadata } from "@/lib/thirdwebStorage";
+import { resolveIpfsUri, uploadNftMetadata } from "@/lib/thirdwebStorage";
 import { client } from "@/lib/client";
 import { localChain } from "@/lib/chain";
 import { MarketAddress, MarketAddressABI } from "@/context/constants";
@@ -78,7 +78,7 @@ const CreateItem = () => {
         );
       }
 
-      const { tokenUri } = await uploadNftMetadata({
+      const { tokenUri, imageUri } = await uploadNftMetadata({
         name,
         description,
         imageFile: file,
@@ -104,6 +104,12 @@ const CreateItem = () => {
       });
 
       await sendTransaction(tx);
+
+      console.log(
+        "NFT created/listed successfully. tokenUri:",
+        tokenUri,
+        resolveIpfsUri(imageUri)
+      );
 
       router.push("/");
     } catch (error) {
